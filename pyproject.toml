@@ -7,7 +7,7 @@ name = "llnltofi"
 dynamic = ["version"]
 description = "Apply the LLNL-G3D-JPS resolution matrix to velocity models."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
 authors = [
     { name = "Sia Ghelichkhan", email = "sia.ghelichkhani@anu.edu.au" },
@@ -25,6 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
