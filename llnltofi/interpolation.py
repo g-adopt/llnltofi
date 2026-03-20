@@ -264,7 +264,9 @@ def project_from_grid(
     query_unit = sph2cart(geo2sph(query_geo))
 
     # Layer radii sorted ascending (CMB first, surface last)
-    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
+    layer_radii = np.array(
+        [R_EARTH_KM - model._depth_avg[li] for li in range(N_LAYERS)]
+    )
     sort_idx = np.argsort(layer_radii)
     radii_sorted = layer_radii[sort_idx]
 

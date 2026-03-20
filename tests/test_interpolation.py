@@ -1,5 +1,3 @@
-import warnings
-
 import numpy as np
 import pytest
 
@@ -9,8 +7,6 @@ from llnltofi._constants import (
     R_EARTH_KM,
     N_LAYERS,
     N_LAYERS_UM_TZ,
-    N_POINTS_UM_TZ,
-    N_POINTS_LM,
 )
 from llnltofi.interpolation import project_onto_grid, project_from_grid
 
@@ -101,7 +97,9 @@ def test_back_output_shape(model):
 
 def test_back_linear_in_depth_lm(model):
     """A field linear in radius should interpolate exactly (LM layers)."""
-    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
+    layer_radii = np.array(
+        [R_EARTH_KM - model._depth_avg[li] for li in range(N_LAYERS)]
+    )
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
@@ -109,8 +107,8 @@ def test_back_linear_in_depth_lm(model):
         grid_values[off : off + n] = layer_radii[layer]
 
     query_pts = []
-    for l in range(N_LAYERS_UM_TZ + 1, N_LAYERS - 1):
-        r_mid = 0.5 * (layer_radii[l] + layer_radii[l + 1])
+    for li in range(N_LAYERS_UM_TZ + 1, N_LAYERS - 1):
+        r_mid = 0.5 * (layer_radii[li] + layer_radii[li + 1])
         query_pts.append([0.0, 0.0, r_mid])
     query_pts = np.array(query_pts)
     expected = query_pts[:, 2]
@@ -121,7 +119,9 @@ def test_back_linear_in_depth_lm(model):
 
 def test_back_linear_in_depth_umtz(model):
     """A field linear in radius should interpolate exactly (UM/TZ layers)."""
-    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
+    layer_radii = np.array(
+        [R_EARTH_KM - model._depth_avg[li] for li in range(N_LAYERS)]
+    )
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
@@ -129,8 +129,8 @@ def test_back_linear_in_depth_umtz(model):
         grid_values[off : off + n] = layer_radii[layer]
 
     query_pts = []
-    for l in range(0, N_LAYERS_UM_TZ - 2):
-        r_mid = 0.5 * (layer_radii[l] + layer_radii[l + 1])
+    for li in range(0, N_LAYERS_UM_TZ - 2):
+        r_mid = 0.5 * (layer_radii[li] + layer_radii[li + 1])
         query_pts.append([0.0, 0.0, r_mid])
     query_pts = np.array(query_pts)
     expected = query_pts[:, 2]
@@ -156,7 +156,9 @@ def test_back_660km_boundary(model):
 
 def test_back_660km_varying_field(model):
     """A spatially varying field should interpolate smoothly across 660 km."""
-    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
+    layer_radii = np.array(
+        [R_EARTH_KM - model._depth_avg[li] for li in range(N_LAYERS)]
+    )
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
