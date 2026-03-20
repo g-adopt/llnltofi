@@ -142,11 +142,13 @@ def project_onto_grid(
 
 def _build_unit_tree(model: ResolutionModel, n_points: int) -> cKDTree:
     """Build a KD-tree of unit-sphere Cartesian vectors for an angular grid."""
-    geo = np.column_stack((
-        np.ones(n_points),
-        model._longitude[:n_points],
-        model._geocentric_latitude[:n_points],
-    ))
+    geo = np.column_stack(
+        (
+            np.ones(n_points),
+            model._longitude[:n_points],
+            model._geocentric_latitude[:n_points],
+        )
+    )
     return cKDTree(sph2cart(geo2sph(geo)))
 
 
@@ -252,17 +254,17 @@ def project_from_grid(
     query_r = query_points[:, 2]
 
     # Build unit vectors for query points (radius=1, same geo2sph convention)
-    query_geo = np.column_stack((
-        np.ones(n_query),
-        query_points[:, 1],
-        query_points[:, 0],
-    ))
+    query_geo = np.column_stack(
+        (
+            np.ones(n_query),
+            query_points[:, 1],
+            query_points[:, 0],
+        )
+    )
     query_unit = sph2cart(geo2sph(query_geo))
 
     # Layer radii sorted ascending (CMB first, surface last)
-    layer_radii = np.array([
-        R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)
-    ])
+    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
     sort_idx = np.argsort(layer_radii)
     radii_sorted = layer_radii[sort_idx]
 
@@ -271,7 +273,9 @@ def project_from_grid(
     i_below = i_above - 1
 
     # Warn and clamp points outside the model's radial extent
-    n_outside = int(np.count_nonzero(i_below < 0) + np.count_nonzero(i_above >= N_LAYERS))
+    n_outside = int(
+        np.count_nonzero(i_below < 0) + np.count_nonzero(i_above >= N_LAYERS)
+    )
     if n_outside > 0:
         warnings.warn(
             f"{n_outside} query point(s) lie outside the model's radial "
@@ -315,7 +319,13 @@ def project_from_grid(
     if len(idxs_a) > 0:
         w, li = _lateral_idw(tree_umtz, query_unit[idxs_a], k)
         result[idxs_a] = _interpolate_batch(
-            grid_values, idxs_a, w, li, layer_below, layer_above, t,
+            grid_values,
+            idxs_a,
+            w,
+            li,
+            layer_below,
+            layer_above,
+            t,
         )
 
     # --- Batch B: both layers LM ---
@@ -323,7 +333,13 @@ def project_from_grid(
     if len(idxs_b) > 0:
         w, li = _lateral_idw(tree_lm, query_unit[idxs_b], k)
         result[idxs_b] = _interpolate_batch(
-            grid_values, idxs_b, w, li, layer_below, layer_above, t,
+            grid_values,
+            idxs_b,
+            w,
+            li,
+            layer_below,
+            layer_above,
+            t,
         )
 
     # --- Batch C: mixed (one UM/TZ, one LM) ---

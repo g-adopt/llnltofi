@@ -72,13 +72,15 @@ def test_bad_input_shape():
 def test_back_constant_field(model):
     """Back-projecting a constant grid vector should return that constant."""
     grid_values = np.full(N_MODEL, 42.0)
-    query_points = np.array([
-        [0.0, 0.0, 5500.0],
-        [45.0, 90.0, 4500.0],
-        [-30.0, -120.0, 6000.0],
-        [89.0, 0.0, 5000.0],
-        [-89.0, 180.0, 3600.0],
-    ])
+    query_points = np.array(
+        [
+            [0.0, 0.0, 5500.0],
+            [45.0, 90.0, 4500.0],
+            [-30.0, -120.0, 6000.0],
+            [89.0, 0.0, 5000.0],
+            [-89.0, 180.0, 3600.0],
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     np.testing.assert_allclose(result, 42.0, atol=1e-6)
 
@@ -86,25 +88,25 @@ def test_back_constant_field(model):
 def test_back_output_shape(model):
     """project_from_grid should return shape (N,)."""
     grid_values = np.ones(N_MODEL)
-    query_points = np.column_stack([
-        np.linspace(-80, 80, 50),
-        np.linspace(-170, 170, 50),
-        np.linspace(3600, 6300, 50),
-    ])
+    query_points = np.column_stack(
+        [
+            np.linspace(-80, 80, 50),
+            np.linspace(-170, 170, 50),
+            np.linspace(3600, 6300, 50),
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     assert result.shape == (50,)
 
 
 def test_back_linear_in_depth_lm(model):
     """A field linear in radius should interpolate exactly (LM layers)."""
-    layer_radii = np.array([
-        R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)
-    ])
+    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
         off = model._layer_offset(layer)
-        grid_values[off:off + n] = layer_radii[layer]
+        grid_values[off : off + n] = layer_radii[layer]
 
     query_pts = []
     for l in range(N_LAYERS_UM_TZ + 1, N_LAYERS - 1):
@@ -119,14 +121,12 @@ def test_back_linear_in_depth_lm(model):
 
 def test_back_linear_in_depth_umtz(model):
     """A field linear in radius should interpolate exactly (UM/TZ layers)."""
-    layer_radii = np.array([
-        R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)
-    ])
+    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
         off = model._layer_offset(layer)
-        grid_values[off:off + n] = layer_radii[layer]
+        grid_values[off : off + n] = layer_radii[layer]
 
     query_pts = []
     for l in range(0, N_LAYERS_UM_TZ - 2):
@@ -143,33 +143,35 @@ def test_back_660km_boundary(model):
     """Query points spanning the 660 km UM/TZ-to-LM transition."""
     grid_values = np.ones(N_MODEL) * 5000.0
     depths_km = np.linspace(620, 720, 20)
-    query_points = np.column_stack([
-        np.zeros(20),
-        np.zeros(20),
-        R_EARTH_KM - depths_km,
-    ])
+    query_points = np.column_stack(
+        [
+            np.zeros(20),
+            np.zeros(20),
+            R_EARTH_KM - depths_km,
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     np.testing.assert_allclose(result, 5000.0, atol=1e-6)
 
 
 def test_back_660km_varying_field(model):
     """A spatially varying field should interpolate smoothly across 660 km."""
-    layer_radii = np.array([
-        R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)
-    ])
+    layer_radii = np.array([R_EARTH_KM - model._depth_avg[l] for l in range(N_LAYERS)])
     grid_values = np.empty(N_MODEL)
     for layer in range(N_LAYERS):
         n = model.n_points(layer)
         off = model._layer_offset(layer)
-        grid_values[off:off + n] = layer_radii[layer]
+        grid_values[off : off + n] = layer_radii[layer]
 
     depths_km = np.linspace(630, 700, 30)
     radii_km = R_EARTH_KM - depths_km
-    query_points = np.column_stack([
-        np.full(30, 10.0),
-        np.full(30, 45.0),
-        radii_km,
-    ])
+    query_points = np.column_stack(
+        [
+            np.full(30, 10.0),
+            np.full(30, 45.0),
+            radii_km,
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     # Result should be monotonically decreasing (radius decreases with depth)
     assert np.all(np.diff(result) < 0), "Expected monotonic decrease across 660 km"
@@ -182,15 +184,17 @@ def test_back_lateral_variation(model):
         n = model.n_points(layer)
         off = model._layer_offset(layer)
         lat = model._geocentric_latitude[:n]
-        grid_values[off:off + n] = np.sin(np.radians(lat * 2))
+        grid_values[off : off + n] = np.sin(np.radians(lat * 2))
 
     # Query at several latitudes at a mid-LM depth
     lats = np.array([-60.0, -30.0, 0.0, 30.0, 60.0])
-    query_points = np.column_stack([
-        lats,
-        np.zeros(5),
-        np.full(5, 5000.0),
-    ])
+    query_points = np.column_stack(
+        [
+            lats,
+            np.zeros(5),
+            np.full(5, 5000.0),
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     expected = np.sin(np.radians(lats * 2))
     np.testing.assert_allclose(result, expected, atol=0.05)
@@ -203,14 +207,16 @@ def test_back_lateral_variation_umtz(model):
         n = model.n_points(layer)
         off = model._layer_offset(layer)
         lon = model._longitude[:n]
-        grid_values[off:off + n] = np.cos(np.radians(lon))
+        grid_values[off : off + n] = np.cos(np.radians(lon))
 
     lons = np.array([-90.0, 0.0, 90.0, 180.0])
-    query_points = np.column_stack([
-        np.zeros(4),
-        lons,
-        np.full(4, 6100.0),
-    ])
+    query_points = np.column_stack(
+        [
+            np.zeros(4),
+            lons,
+            np.full(4, 6100.0),
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     expected = np.cos(np.radians(lons))
     np.testing.assert_allclose(result, expected, atol=0.05)
@@ -219,13 +225,15 @@ def test_back_lateral_variation_umtz(model):
 def test_back_poles(model):
     """Query points at the geographic poles where longitude is degenerate."""
     grid_values = np.full(N_MODEL, 99.0)
-    query_points = np.array([
-        [90.0, 0.0, 5500.0],
-        [90.0, 90.0, 5500.0],
-        [90.0, -180.0, 5500.0],
-        [-90.0, 0.0, 5500.0],
-        [-90.0, 45.0, 4000.0],
-    ])
+    query_points = np.array(
+        [
+            [90.0, 0.0, 5500.0],
+            [90.0, 90.0, 5500.0],
+            [90.0, -180.0, 5500.0],
+            [-90.0, 0.0, 5500.0],
+            [-90.0, 45.0, 4000.0],
+        ]
+    )
     result = project_from_grid(grid_values, query_points, model)
     np.testing.assert_allclose(result, 99.0, atol=1e-6)
 
@@ -233,10 +241,12 @@ def test_back_poles(model):
 def test_back_boundary_clamp(model):
     """Query above shallowest and below deepest layer should clamp with warning."""
     grid_values = np.full(N_MODEL, 7.0)
-    query_points = np.array([
-        [0.0, 0.0, R_EARTH_KM + 100.0],
-        [0.0, 0.0, 3000.0],
-    ])
+    query_points = np.array(
+        [
+            [0.0, 0.0, R_EARTH_KM + 100.0],
+            [0.0, 0.0, 3000.0],
+        ]
+    )
     with pytest.warns(UserWarning, match="outside the model's radial extent"):
         result = project_from_grid(grid_values, query_points, model)
     np.testing.assert_allclose(result, 7.0, atol=1e-6)
