@@ -8,14 +8,14 @@ import numpy as np
 from scipy.spatial import cKDTree
 
 from ._constants import (
-    R_EARTH_KM,
+    GRID_SPACING_LM_KM,
+    GRID_SPACING_UM_TZ_KM,
     N_LAYERS,
     N_LAYERS_UM_TZ,
-    N_POINTS_UM_TZ,
-    N_POINTS_LM,
     N_MODEL,
-    GRID_SPACING_UM_TZ_KM,
-    GRID_SPACING_LM_KM,
+    N_POINTS_LM,
+    N_POINTS_UM_TZ,
+    R_EARTH_KM,
 )
 from ._grid import ResolutionModel
 from ._spherical import geo2sph, sph2cart

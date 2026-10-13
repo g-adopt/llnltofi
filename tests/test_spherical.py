@@ -1,6 +1,6 @@
 import numpy as np
 
-from llnltofi._spherical import cart2sph, sph2cart, geo2sph, sph2geo, cart2polar
+from llnltofi._spherical import cart2polar, cart2sph, geo2sph, sph2cart, sph2geo
 
 
 def test_cart2sph_identity():

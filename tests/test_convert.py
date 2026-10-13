@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 import scipy.sparse
 
-from llnltofi.convert import convert_text_to_npz
 from llnltofi._constants import N_LAYERS
+from llnltofi.convert import convert_text_to_npz
 
 
 @pytest.fixture

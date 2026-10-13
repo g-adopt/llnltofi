@@ -4,12 +4,12 @@ import numpy as np
 import scipy.sparse
 
 from ._constants import (
-    R_EARTH_KM,
     N_LAYERS,
     N_LAYERS_UM_TZ,
-    N_POINTS_UM_TZ,
-    N_POINTS_LM,
     N_MODEL,
+    N_POINTS_LM,
+    N_POINTS_UM_TZ,
+    R_EARTH_KM,
 )
 from ._download import ensure_data
 from ._spherical import geo2sph, sph2cart

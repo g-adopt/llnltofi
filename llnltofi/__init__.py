@@ -5,7 +5,7 @@ from .interpolation import project_from_grid
 
 __all__ = [
     "ResolutionModel",
-    "load_resolution_matrix",
     "convert_text_to_npz",
+    "load_resolution_matrix",
     "project_from_grid",
 ]

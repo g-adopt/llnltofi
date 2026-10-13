@@ -10,8 +10,8 @@ No external model data is needed; the anomaly is generated directly on the
 LLNL grid points.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 import llnltofi
 

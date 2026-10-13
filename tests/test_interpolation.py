@@ -3,12 +3,12 @@ import pytest
 
 from llnltofi import ResolutionModel
 from llnltofi._constants import (
-    N_MODEL,
-    R_EARTH_KM,
     N_LAYERS,
     N_LAYERS_UM_TZ,
+    N_MODEL,
+    R_EARTH_KM,
 )
-from llnltofi.interpolation import project_onto_grid, project_from_grid
+from llnltofi.interpolation import project_from_grid, project_onto_grid
 
 
 @pytest.fixture
@@ -129,7 +129,7 @@ def test_back_linear_in_depth_umtz(model):
         grid_values[off : off + n] = layer_radii[layer]
 
     query_pts = []
-    for li in range(0, N_LAYERS_UM_TZ - 2):
+    for li in range(N_LAYERS_UM_TZ - 2):
         r_mid = 0.5 * (layer_radii[li] + layer_radii[li + 1])
         query_pts.append([0.0, 0.0, r_mid])
     query_pts = np.array(query_pts)

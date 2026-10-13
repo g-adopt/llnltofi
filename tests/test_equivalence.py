@@ -17,8 +17,8 @@ from llnltofi._constants import (
     N_LAYERS,
     N_LAYERS_UM_TZ,
     N_MODEL,
-    N_POINTS_UM_TZ,
     N_POINTS_LM,
+    N_POINTS_UM_TZ,
 )
 from llnltofi._download import ensure_data
 
