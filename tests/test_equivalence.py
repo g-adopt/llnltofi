@@ -193,7 +193,7 @@ def test_apply_matches_direct_text_R(R_from_text, modern_model):
         "global column index is an exact multiple of the layer size, modular "
         "arithmetic yields c_index=-1 and l_index is off by one, reading a "
         "value from the wrong depth layer.  2,357 / 75M R entries are "
-        "affected, causing 1,107 / 1,003,608 output points to differ."
+        "affected, causing 1,011 / 1,003,608 output points to differ."
     ),
     strict=True,
 )
